@@ -18,18 +18,27 @@ class AuthController extends Controller
     {
         $this->middleware('auth:api', ['except' => ['login']]);
     }
-    public function login()
+    // public function login()
+    // {
+    //     $credentials = request(['email', 'password']);
+
+    //     if (!$token = auth()->attempt($credentials)) {
+    //         return response()->json(['error' => 'Không được phép truy cập'], 401);
+    //     }
+
+    //     $refreshToken = $this->createRefreshToken();
+    //     return $this->respondWithToken($token, $refreshToken);
+    // }
+    public function login(Request $request)
     {
-        $credentials = request(['email', 'password']);
-
-        if (!$token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Không được phép truy cập'], 401);
+        $credentials = $request->only('email', 'password');
+        
+        if (!$token = Auth::attempt($credentials)) {
+            return response()->json(['error' => 'Unauthorized'], 401);
         }
-
-        $refreshToken = $this->createRefreshToken();
-        return $this->respondWithToken($token, $refreshToken);
+    
+        return response()->json(['message' => 'Login successful', 'token' => $token]);
     }
-
     public function me()
     {
         echo "sj";

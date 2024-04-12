@@ -15,10 +15,10 @@
                <h1>Account Login</h1>
                <form action="/api/auth/login" class="login-form" method="POST">
                   <div class="form-group">
-                     <input type="text" placeholder="User Name" class="form-control">
+                     <input type="text" name="email" placeholder="User Name" class="form-control">
                   </div>
                   <div class="form-group">
-                     <input type="password" placeholder="Password"  class="form-control">
+                     <input type="password" name="password" placeholder="Password"  class="form-control">
                   </div>
                   <div class="remember">
                      {{-- <label class="custom-checkbox">Remember me
