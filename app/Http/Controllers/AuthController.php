@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -20,8 +22,8 @@ class AuthController extends Controller
     {
         $credentials = request(['email', 'password']);
 
-        if (!$token = auth('api')->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+        if (!$token = auth()->attempt($credentials)) {
+            return response()->json(['error' => 'Không được phép truy cập'], 401);
         }
 
         $refreshToken = $this->createRefreshToken();
@@ -30,6 +32,7 @@ class AuthController extends Controller
 
     public function me()
     {
+        echo "sj";
         try {
             return response()->json(auth('api')->user());
         } catch (JWTException $exception) {
@@ -81,4 +84,36 @@ class AuthController extends Controller
         $refreshToken = JWTAuth::getJWTProvider()->encode($data);
         return $refreshToken;
     }
+    // public function createUser(Request $request){
+    //     try{
+    //         $validateUser = Validator::make($request->all(),[
+    //             'name' => 'required',
+    //             'email' => 'required|email|unique:users,email',
+    //             'password' => 'required'
+    //         ]);
+    //         if($validateUser->fails()){
+    //             return response()->json([
+    //                 'status' => false,
+    //                 'message' => 'validation error',
+    //                 'error' =>$validateUser->errors()
+    //             ],401);
+    //         }
+    //         $user  = User::create([
+    //             'name' =>$request->name,
+    //             'email' =>$request->email,
+    //             'password' =>Hash::make($request->password),
+    //         ]);
+    //         return response()->json([
+    //             'status' => true,
+    //             'message' => 'User created successfully',
+    //             'error' => $user->createToken("API TOKEN")->plainTextToken
+    //         ],200);
+    //     }catch(\Throwable $th){
+    //         return response()->json([
+    //             'status' => false,
+    //             'message' => $th->getMessage()
+    //         ],500);
+    //     }
+
+    // }
 }
